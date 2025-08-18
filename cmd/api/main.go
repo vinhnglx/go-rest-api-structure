@@ -5,11 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/vinhnglx/go-rest-api-template/config"
+	"github.com/vinhnglx/go-rest-api-template/internal/container"
 	"github.com/vinhnglx/go-rest-api-template/internal/database"
-	"github.com/vinhnglx/go-rest-api-template/internal/handlers"
 	"github.com/vinhnglx/go-rest-api-template/internal/middleware"
-	"github.com/vinhnglx/go-rest-api-template/internal/repositories"
-	"github.com/vinhnglx/go-rest-api-template/internal/services"
 )
 
 func main() {
@@ -17,11 +15,7 @@ func main() {
 
 	database.Connect()
 
-	productRepo := repositories.NewProductRepository(database.DB)
-
-	productService := services.NewProductService(productRepo)
-
-	productHandler := handlers.NewProductHandler(productService)
+	container := container.NewContainer(database.DB)
 
 	router := gin.Default()
 
@@ -29,7 +23,7 @@ func main() {
 
 	api := router.Group("/api/v1")
 	{
-		api.GET("/products", productHandler.GetAllProducts)
+		api.GET("/products", container.Handlers.Product.GetAllProducts)
 	}
 
 	go func() {
