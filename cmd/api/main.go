@@ -24,6 +24,7 @@ func main() {
 	api := router.Group("/api/v1")
 	{
 		api.GET("/products", container.Handlers.Product.GetAllProducts)
+		api.GET("/products/:id", container.Handlers.Product.GetById)
 	}
 
 	go func() {

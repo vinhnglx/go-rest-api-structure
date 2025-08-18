@@ -1,8 +1,11 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/vinhnglx/go-rest-api-template/internal/models"
 	"github.com/vinhnglx/go-rest-api-template/internal/repositories"
+	"gorm.io/gorm"
 )
 
 type ProductService struct {
@@ -35,4 +38,16 @@ func (s *ProductService) GetAllProducts() ([]models.ProductResponse, error) {
 	}
 
 	return response, nil
+}
+
+func (s *ProductService) GetById(id uint) (*models.ProductResponse, error) {
+	product, err := s.productRepo.GetById(id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errors.New("product not found")
+		}
+		return nil, err
+	}
+
+	return product, nil
 }

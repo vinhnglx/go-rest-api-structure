@@ -21,3 +21,20 @@ func (r *ProductRepository) GetAllProducts() ([]models.Product, error) {
 	}
 	return products, nil
 }
+
+func (r *ProductRepository) GetById(id uint) (*models.ProductResponse, error) {
+	var product models.Product
+
+	if err := r.db.First(&product, id).Error; err != nil {
+		return nil, err
+	}
+
+	response := &models.ProductResponse{
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+	}
+
+	return response, nil
+}
