@@ -25,13 +25,13 @@ func Load() {
 	}
 
 	AppConfig = &Config{
-		DBHost:     os.Getenv("DB_HOST"),
-		DBUser:     os.Getenv("DB_USER"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBName:     os.Getenv("DB_NAME"),
-		DBPort:     os.Getenv("DB_PORT"),
-		DBSSLMode:  os.Getenv("DB_SSL_MODE"),
-		PORT:       os.Getenv("PORT"),
+		DBHost:     getEnv("DB_HOST", "localhost"),
+		DBUser:     getEnv("DB_USER", "postgres"),
+		DBPassword: getEnv("DB_PASSWORD", "password"),
+		DBName:     getEnv("DB_NAME", "dbname"),
+		DBPort:     getEnv("DB_PORT", "5432"),
+		DBSSLMode:  getEnv("DB_SSL_MODE", "disable"),
+		PORT:       getEnv("PORT", "8080"),
 	}
 
 	log.Println("Configuration loaded successfully")
