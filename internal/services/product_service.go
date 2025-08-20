@@ -51,3 +51,17 @@ func (s *ProductService) GetById(id uint) (*models.ProductResponse, error) {
 
 	return product, nil
 }
+
+func (s *ProductService) Create(req models.CreateProductRequest) (*models.Product, error) {
+	product := &models.Product{
+		Name:        req.Name,
+		Description: req.Description,
+		Price:       req.Price,
+	}
+
+	if err := s.productRepo.Create(product); err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}

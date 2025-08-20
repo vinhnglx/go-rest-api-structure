@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/vinhnglx/go-rest-api-template/internal/models"
 	"github.com/vinhnglx/go-rest-api-template/internal/services"
 )
 
@@ -31,6 +32,7 @@ func (h *ProductHandler) GetAllProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": products})
 }
 
+// GET /products/:id
 func (h *ProductHandler) GetById(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
@@ -51,4 +53,23 @@ func (h *ProductHandler) GetById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": product})
+}
+
+// POST /products
+func (h *ProductHandler) Create(c *gin.Context) {
+	var req models.CreateProductRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+
+	product, err := h.productService.Create(req)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"data": product})
 }

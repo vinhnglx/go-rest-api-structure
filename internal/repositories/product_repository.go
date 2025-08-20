@@ -14,6 +14,7 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
 	return &ProductRepository{db: db}
 }
 
+// Instance methods for ProductRepository
 func (r *ProductRepository) GetAllProducts() ([]models.Product, error) {
 	var products []models.Product
 	if err := r.db.Find(&products).Error; err != nil {
@@ -37,4 +38,8 @@ func (r *ProductRepository) GetById(id uint) (*models.ProductResponse, error) {
 	}
 
 	return response, nil
+}
+
+func (r *ProductRepository) Create(product *models.Product) error {
+	return r.db.Create(product).Error
 }
