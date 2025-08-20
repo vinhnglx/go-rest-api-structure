@@ -27,6 +27,7 @@ func main() {
 		api.GET("/products/:id", container.Handlers.Product.GetById)
 		api.POST("/products", container.Handlers.Product.Create)
 		api.PUT("/products/:id", container.Handlers.Product.Update)
+		api.DELETE("/products/:id", container.Handlers.Product.Delete)
 	}
 
 	go func() {
