@@ -23,3 +23,9 @@ type CreateProductRequest struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price" binding:"required"`
 }
+
+type UpdateProductRequest struct {
+	Name        string  `json:"name" binding:"required"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price" binding:"required"`
+}

@@ -73,3 +73,43 @@ func (h *ProductHandler) Create(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"data": product})
 }
+
+// PUT /products/:id
+func (h *ProductHandler) Update(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	var req models.UpdateProductRequest
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+
+	product, err := h.productService.GetById(uint(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if product == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "product not found"})
+		return
+	}
+
+	updated_product, err := h.productService.Update(uint(id), models.UpdateProductRequest{
+		Name:        req.Name,
+		Description: req.Description,
+		Price:       req.Price,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": updated_product})
+}

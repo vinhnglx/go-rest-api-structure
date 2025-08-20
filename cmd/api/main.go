@@ -26,6 +26,7 @@ func main() {
 		api.GET("/products", container.Handlers.Product.GetAllProducts)
 		api.GET("/products/:id", container.Handlers.Product.GetById)
 		api.POST("/products", container.Handlers.Product.Create)
+		api.PUT("/products/:id", container.Handlers.Product.Update)
 	}
 
 	go func() {

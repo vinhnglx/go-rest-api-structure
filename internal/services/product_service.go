@@ -49,10 +49,17 @@ func (s *ProductService) GetById(id uint) (*models.ProductResponse, error) {
 		return nil, err
 	}
 
-	return product, nil
+	productResponse := &models.ProductResponse{
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+	}
+
+	return productResponse, nil
 }
 
-func (s *ProductService) Create(req models.CreateProductRequest) (*models.Product, error) {
+func (s *ProductService) Create(req models.CreateProductRequest) (*models.ProductResponse, error) {
 	product := &models.Product{
 		Name:        req.Name,
 		Description: req.Description,
@@ -63,5 +70,45 @@ func (s *ProductService) Create(req models.CreateProductRequest) (*models.Produc
 		return nil, err
 	}
 
-	return product, nil
+	productResponse := &models.ProductResponse{
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+	}
+
+	return productResponse, nil
+}
+
+func (s *ProductService) Update(id uint, req models.UpdateProductRequest) (*models.ProductResponse, error) {
+	existing_product, err := s.productRepo.GetById(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if req.Name != "" {
+		existing_product.Name = req.Name
+	}
+
+	if req.Description != "" {
+		existing_product.Description = req.Description
+	}
+
+	if req.Price > 0 {
+		existing_product.Price = req.Price
+	}
+
+	if err := s.productRepo.Update(existing_product); err != nil {
+		return nil, err
+	}
+
+	productResponse := &models.ProductResponse{
+		ID:          existing_product.ID,
+		Name:        existing_product.Name,
+		Description: existing_product.Description,
+		Price:       existing_product.Price,
+	}
+
+	return productResponse, nil
 }
