@@ -3,10 +3,10 @@ package models
 import "time"
 
 type Product struct {
-	ID          uint
-	Name        string
-	Description string
-	Price       float64
+	ID          uint    `gorm:"primaryKey"`
+	Name        string  `gorm:"not null"`
+	Description string  `gorm:"not null"`
+	Price       float64 `gorm:"not null"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
