@@ -28,6 +28,12 @@ func main() {
 		api.POST("/products", container.Handlers.Product.Create)
 		api.PUT("/products/:id", container.Handlers.Product.Update)
 		api.DELETE("/products/:id", container.Handlers.Product.Delete)
+
+		auth := api.Group("/auth")
+		{
+			auth.POST("/login", container.Handlers.Auth.Login)
+			auth.POST("/register", container.Handlers.Auth.Register)
+		}
 	}
 
 	go func() {
