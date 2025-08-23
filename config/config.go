@@ -15,6 +15,7 @@ type Config struct {
 	DBPort     string
 	DBSSLMode  string
 	PORT       string
+	JWT_SECRET string
 }
 
 var AppConfig *Config
@@ -32,6 +33,11 @@ func Load() {
 		DBPort:     getEnv("DB_PORT", "5432"),
 		DBSSLMode:  getEnv("DB_SSL_MODE", "disable"),
 		PORT:       getEnv("PORT", "8080"),
+		JWT_SECRET: getEnv("JWT_SECRET", "your_jwt_secret"),
+	}
+
+	if AppConfig.JWT_SECRET == "" || AppConfig.JWT_SECRET == "your_jwt_secret" {
+		log.Fatal("JWT_SECRET must be set in the environment variables or .env file")
 	}
 
 	log.Println("Configuration loaded successfully")
