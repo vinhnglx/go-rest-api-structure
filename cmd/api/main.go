@@ -23,11 +23,24 @@ func main() {
 
 	api := router.Group("/api/v1")
 	{
-		api.GET("/products", container.Handlers.Product.GetAllProducts)
-		api.GET("/products/:id", container.Handlers.Product.GetById)
-		api.POST("/products", container.Handlers.Product.Create)
-		api.PUT("/products/:id", container.Handlers.Product.Update)
-		api.DELETE("/products/:id", container.Handlers.Product.Delete)
+		productProtected := api.Group("/products").Use(middleware.RequireAuth(container.Services.Auth))
+
+		productProtected.GET("/", container.Handlers.Product.GetAllProducts)
+		productProtected.GET("/:id", container.Handlers.Product.GetById)
+		productProtected.POST("/", container.Handlers.Product.Create)
+		productProtected.PUT("/:id", container.Handlers.Product.Update)
+		productProtected.DELETE("/:id", container.Handlers.Product.Delete)
+
+		auth := api.Group("/auth")
+		{
+			auth.POST("/login", container.Handlers.Auth.Login)
+			auth.POST("/register", container.Handlers.Auth.Register)
+		}
+
+		authProtected := auth.Group("/").Use(middleware.RequireAuth(container.Services.Auth))
+		{
+			authProtected.GET("/me", container.Handlers.Auth.Me)
+		}
 	}
 
 	go func() {
