@@ -47,3 +47,21 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	c.JSON(200, authResponse)
 }
+
+// GET /auth/me
+func (h *AuthHandler) Me(c *gin.Context) {
+	user, exists := c.Get("current_user")
+	if !exists {
+		c.JSON(401, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	current_user := user.(*models.User)
+
+	response := models.UserResponse{
+		Name:  current_user.Name,
+		Email: current_user.Email,
+	}
+
+	c.JSON(200, response)
+}

@@ -73,3 +73,19 @@ func (s *AuthService) Login(req models.LoginRequest) (*models.AuthResponse, erro
 		Token: token,
 	}, nil
 }
+
+func (s *AuthService) ValidateToken(token string) (*models.User, error) {
+	claims, err := util.ValidateJWT(token)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.userRepo.GetById(claims.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
