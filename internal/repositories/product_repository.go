@@ -9,6 +9,14 @@ type ProductRepository struct {
 	db *gorm.DB
 }
 
+type ProductRepositoryInterface interface {
+	GetAllProducts() ([]models.Product, error)
+	GetById(id uint) (*models.Product, error)
+	Create(product *models.Product) error
+	Update(product *models.Product) error
+	Delete(id uint) error
+}
+
 // Constructor for ProductRepository
 func NewProductRepository(db *gorm.DB) *ProductRepository {
 	return &ProductRepository{db: db}
